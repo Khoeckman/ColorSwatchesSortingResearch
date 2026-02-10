@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <meta name="description" content="Swatches Research" />
+
+  <title>Swatches Research</title>
+  <!-- <link rel="icon" href="img/favicon.webp" sizes="192x192" /> -->
+
+  <!-- Google Fonts: Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet" />
+
+  <!-- CSS -->
+
+  <!-- JS -->
+  <script type="module" crossorigin src="/assets/index-BXSBop3I.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-COM96j-a.css">
+</head>
+
+<body>
+  <main>
+    <div class="title">
+      <h1>Color Swatches Sorting Research</h1>
+      <span>The goal is to find out what sorting algorithm produces the <strong>smoothest</strong> and most
+        <strong>visually coherent</strong> swatch order.</span>
+    </div>
+
+    <ul class="solutions">
+      <li class="separator-after">
+        <span class="title">
+          <h2>Generated Colors</h2>
+          <span class="score" title="Score">0</span>
+        </span>
+        <p>
+          Each box contains a list of the <strong>same colors</strong>.<br>
+          The number next to each title is the <strong>score</strong> given to the <strong>solution</strong>.<br>
+          <strong>Note</strong> that the scoring algorithm itself is not perfect.
+        </p>
+        <ol></ol>
+      </li>
+
+      <li>
+        <span class="title">
+          <h2>Hue</h2>
+          <span class="score" title="Score">0</span>
+        </span>
+        <p><code>hueA - hueB</code></p>
+        <ol></ol>
+      </li>
+      <li>
+        <span class="title">
+          <h2>Saturation</h2>
+          <span class="score" title="Score">0</span>
+        </span>
+        <p><code>satA - satB</code></p>
+        <ol></ol>
+      </li>
+
+      <li>
+        <span class="title">
+          <h2>Lightness</h2>
+          <span class="score" title="Score">0</span>
+        </span>
+        <p><code>lightA - lightB</code></p>
+        <ol></ol>
+      </li>
+
+      <li class="separator-after">
+        <span class="title">
+          <h2>Value</h2>
+          <span class="score" title="Score">0</span>
+        </span>
+        <p><code>valA - valB</code></p>
+        <ol></ol>
+      </li>
+
+      <li>
+        <span class="title">
+          <h2>Hue & Saturation</h2>
+          <span class="score" title="Score">0</span>
+        </span>
+        <p><code>+(satA > 50) - +(satB > 50) || hueA - hueB</code></p>
+        <ol></ol>
+      </li>
+
+      <li>
+        <span class="title">
+          <h2>Hue & Lightness</h2>
+          <span class="score" title="Score">0</span>
+        </span>
+        <p><code>+(lightA > 50) - +(lightB > 50) || hueA - hueB</code></p>
+        <ol></ol>
+      </li>
+
+      <li class="separator-after">
+        <span class="title">
+          <h2>Hue & Value</h2>
+          <span class="score" title="Score">0</span>
+        </span>
+        <p><code>+(valA > 50) - +(valB > 50) || hueA - hueB</code></p>
+        <ol></ol>
+      </li>
+
+      <li>
+        <span class="title">
+          <h2>Nearest neighbor + 2-opt</h2>
+          <span class="score" title="Score">0</span>
+        </span>
+        <p>TSP</p>
+        <ol></ol>
+      </li>
+
+      <li>
+        <span class="title">
+          <h2>Nearest neighbor + 12-start NN + 2-opt</h2>
+          <span class="score" title="Score">0</span>
+        </span>
+        <p>TSP</p>
+        <ol></ol>
+      </li>
+
+      <li>
+        <span class="title">
+          <h2>LAB distances + 12-start NN + 2-opt</h2>
+          <span class="score" title="Score">0</span>
+        </span>
+        <p>Gets scored lower because LAB is for human perception.</p>
+        <ol></ol>
+      </li>
+    </ul>
+  </main>
+</body>
+
+</html>
