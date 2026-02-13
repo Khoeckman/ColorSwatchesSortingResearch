@@ -8,8 +8,8 @@ export function scoreSwatchPath(path: RGB[], power = 1): number {
 
   // Euclidean distance between two colors
   const dist = (a: RGB, b: RGB) => {
-    const x1: LAB = convert.rgb.lab(a)
-    const x2: LAB = convert.rgb.lab(b)
+    const x1: LAB = convert.rgb.lab.raw(a)
+    const x2: LAB = convert.rgb.lab.raw(b)
     return getDeltaE_CIEDE2000(x1, x2)
   }
 

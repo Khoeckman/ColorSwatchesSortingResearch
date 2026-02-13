@@ -24,8 +24,8 @@ export default class TravelingSalesmanSolver {
   }
 
   static distLAB(a: RGB, b: RGB) {
-    const x1: LAB = convert.rgb.lab(a)
-    const x2: LAB = convert.rgb.lab(b)
+    const x1: LAB = convert.rgb.lab.raw(a)
+    const x2: LAB = convert.rgb.lab.raw(b)
     return getDeltaE_CIEDE2000(x1, x2)
   }
 
