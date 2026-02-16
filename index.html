@@ -22,7 +22,8 @@
   <link href="css/style.css" rel="stylesheet" />
 
   <!-- JS -->
-  <script src="src/forms/settings.ts" type="module"></script>
+  <script src="src/forms/settings1D.ts" type="module"></script>
+  <script src="src/forms/settings2D.ts" type="module"></script>
   <script src="src/index.ts" type="module"></script>
 </head>
 
@@ -44,29 +45,41 @@
   <main>
     <div class="title">
       <h1>Sorting Swatches Research</h1>
-      <span>The goal is to find out what sorting algorithm produces the <strong>smoothest</strong> and most
-        <strong>visually coherent</strong> swatch order.</span>
+      <p>
+        The goal is to find out what sorting algorithm produces the <strong>smoothest</strong> and most
+        <strong>visually coherent</strong> swatch order.
+      </p>
+
+      <strong>Sections:</strong>
+
+      <ul>
+        <li><a href="#one-d">One dimensional</a></li>
+        <li><a href="#two-d">Two dimensional</a></li>
+      </ul>
+
     </div>
+
+    <h2 id="one-d" tabindex="-1">One dimensional</h2>
 
     <ul class="solutions">
       <li class="separator-after not-solution">
-        <form class="form-validator" action="javascript:void(0)" autocapitalize="off" autocomplete="off"
+        <form id="settings1D" class="form-validator" action="javascript:void(0)" autocapitalize="off" autocomplete="off"
           autocorrect="off" novalidate>
-          <h2>Settings</h2>
+          <h3>Settings</h3>
 
-          <div class="error-summary">
+          <div class="error-summary" hidden>
             <ul></ul>
           </div>
 
           <div class="fields inline">
             <label>
               Amount of Swatches
-              <input id="settings-swatch-amount" type="number" min="1" max="999" value="41">
+              <input id="settings1D-swatch-amount" type="number" min="1" max="999" value="41">
             </label>
 
             <label>
-              <span>Swatch Size <span style="font-weight: lighter;">(px)</span></span>
-              <input id="settings-swatch-size" type="number" min="1" max="3200" value="32">
+              <span>Swatch Size <span class="unit">(px)</span></span>
+              <input id="settings1D-swatch-size" type="number" min="1" max="3200" value="32">
             </label>
           </div>
 
@@ -80,7 +93,7 @@
 
       <li class="separator-after">
         <div class="title">
-          <h2>Swatches</h2>
+          <h3>Swatches</h3>
           <span class="score" title="Score">0</span>
         </div>
         <p>
@@ -95,7 +108,7 @@
 
       <li>
         <div class="title">
-          <h2>Hue</h2>
+          <h3>Hue</h3>
           <span class="score" title="Score">0</span>
         </div>
         <p><code>hueA - hueB</code></p>
@@ -103,7 +116,7 @@
       </li>
       <li>
         <div class="title">
-          <h2>Saturation</h2>
+          <h3>Saturation</h3>
           <span class="score" title="Score">0</span>
         </div>
         <p><code>satA - satB</code></p>
@@ -112,7 +125,7 @@
 
       <li>
         <div class="title">
-          <h2>Lightness</h2>
+          <h3>Lightness</h3>
           <span class="score" title="Score">0</span>
         </div>
         <p><code>lightA - lightB</code></p>
@@ -121,7 +134,7 @@
 
       <li class="separator-after">
         <div class="title">
-          <h2>Value</h2>
+          <h3>Value</h3>
           <span class="score" title="Score">0</span>
         </div>
         <p><code>valA - valB</code></p>
@@ -130,7 +143,7 @@
 
       <li>
         <div class="title">
-          <h2>Hue & Saturation</h2>
+          <h3>Hue & Saturation</h3>
           <span class="score" title="Score">0</span>
         </div>
         <p><code>+(satA > 50) - +(satB > 50) || hueA - hueB</code></p>
@@ -139,7 +152,7 @@
 
       <li>
         <div class="title">
-          <h2>Hue & Lightness</h2>
+          <h3>Hue & Lightness</h3>
           <span class="score" title="Score">0</span>
         </div>
         <p><code>+(lightA > 50) - +(lightB > 50) || hueA - hueB</code></p>
@@ -148,7 +161,7 @@
 
       <li class="separator-after">
         <div class="title">
-          <h2>Hue & Value</h2>
+          <h3>Hue & Value</h3>
           <span class="score" title="Score">0</span>
         </div>
         <p><code>+(valA > 50) - +(valB > 50) || hueA - hueB</code></p>
@@ -157,7 +170,7 @@
 
       <li>
         <div class="title">
-          <h2>Hue path + 2-opt</h2>
+          <h3>Hue path + 2-opt</h3>
           <span class="score" title="Score">0</span>
         </div>
         <p><code>hueA - hueB &nbsp; &nbsp; LAB dist</code></p>
@@ -166,7 +179,7 @@
 
       <li>
         <div class="title">
-          <h2>Nearest neighbor path</h2>
+          <h3>Nearest neighbor path</h3>
           <span class="score" title="Score">0</span>
         </div>
         <p><code>LAB dist</code></p>
@@ -175,7 +188,7 @@
 
       <li>
         <div class="title">
-          <h2>Nearest neighbor path + best-start</h2>
+          <h3>Nearest neighbor path + best-start</h3>
           <span class="score" title="Score">0</span>
         </div>
         <p><code>LAB dist</code></p>
@@ -184,7 +197,7 @@
 
       <li>
         <div class="title">
-          <h2>Nearest neighbor path + 2-opt</h2>
+          <h3>Nearest neighbor path + 2-opt</h3>
           <span class="score" title="Score">0</span>
         </div>
         <p><code>LAB dist</code></p>
@@ -193,7 +206,7 @@
 
       <li>
         <div class="title">
-          <h2>[LAB] Nearest neighbor path + 2-opt + best-start</h2>
+          <h3>Nearest neighbor path + 2-opt + best-start</h3>
           <span class="score" title="Score">0</span>
         </div>
         <p><code>LAB dist</code></p>
@@ -202,13 +215,67 @@
 
       <li>
         <div class="title">
-          <h2>[RGB] Nearest neighbor path + 2-opt + best-start</h2>
+          <h3>RGB Nearest neighbor path + 2-opt + best-start</h3>
           <span class="score" title="Score">0</span>
         </div>
         <p><code>RGB dist</code></p>
         <ol></ol>
       </li>
     </ul>
+
+    <h2 id="two-d" tabindex="-1">Two dimensional</h2>
+
+    <ul class="solutions">
+      <li class="separator-after not-solution">
+        <form id="settings2D" class="form-validator" action="javascript:void(0)" autocapitalize="off" autocomplete="off"
+          autocorrect="off" novalidate>
+          <h3>Settings</h3>
+
+          <div class="error-summary" hidden>
+            <ul></ul>
+          </div>
+
+          <div class="fields inline">
+            <label>
+              Horizontal Swatches
+              <input id="settings2D-swatch-amount-x" type="number" min="1" max="32" value="20">
+            </label>
+
+            <label>
+              Vertical Swatches
+              <input id="settings2D-swatch-amount-y" type="number" min="1" max="32" value="20">
+            </label>
+
+            <label>
+              <span>Swatch Size <span class="unit">(px)</span></span>
+              <input id="settings2D-swatch-size" type="number" min="1" max="3200" value="32">
+            </label>
+          </div>
+
+          <div class="actions">
+            <button type="submit">Apply</button>
+            <button name="settings-update" type="button">Update Size</button>
+            <button name="settings-reset" type="button" class="error">Reset</button>
+          </div>
+        </form>
+      </li>
+
+      <li class="separator-after">
+        <div class="title">
+          <h3>Swatches</h3>
+          <span class="score" title="Score">0</span>
+        </div>
+        <p>Now each box contains a <strong>rectangular plane</strong> of the same colors.</p>
+        <ol></ol>
+      </li>
+
+      <li>
+        <div class="title">
+          <h3>Sorted</h3>
+          <span class="score" title="Score">0</span>
+        </div>
+        <ol></ol>
+      </li>
   </main>
 
   <footer>

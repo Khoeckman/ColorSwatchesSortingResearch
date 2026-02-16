@@ -14,7 +14,20 @@
   --c72: hsl(var(--hue), 18%, 72%);
   --fg: hsl(var(--hue), 18%, 96%);
 
-  --swatch-size: 30px;
+  --swatch-size-1D: 30px;
+  --swatch-size-2D: 30px;
+}
+
+@property --swatch-size-1D {
+  syntax: '<resolution>';
+  inherits: false;
+  initial-value: 30px;
+}
+
+@property --swatch-size-2D {
+  syntax: '<resolution>';
+  inherits: false;
+  initial-value: 30px;
 }
 
 html {
@@ -69,4 +82,24 @@ footer p {
   footer {
     padding: 2rem 1rem;
   }
+}
+
+h1 {
+  font-size: 2.4rem;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+a {
+  transition: color 125ms;
+}
+
+a:hover {
+  color: var(--c72);
 }

@@ -1,0 +1,4 @@
+#two-d + .solutions > li ol li {
+  width: var(--swatch-size-2D);
+  height: var(--swatch-size-2D);
+}

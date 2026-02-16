@@ -1,5 +1,6 @@
 @import './FormValidator.css';
 @import './form.css';
+@import './2d.css';
 
 main {
   flex: 1;
@@ -9,12 +10,21 @@ main {
   height: 100%;
 }
 
+main h2 {
+  margin-top: 4rem;
+  width: fit-content;
+}
+
+main .unit {
+  font-weight: lighter;
+}
+
 main > .title {
-  margin-block: 2rem;
+  margin-top: 2rem;
 }
 
 main > .title h1 {
-  margin-block: 0 1rem;
+  margin: 0 0 1rem 0;
 }
 
 main .solutions {
@@ -44,7 +54,7 @@ main .solutions > li:nth-child(2) {
   border: 1px solid var(--c48);
 }
 
-main .solutions > li h2 {
+main .solutions > li h3 {
   margin: 0;
 }
 
@@ -76,20 +86,14 @@ main .solutions > li ol {
   gap: 2px;
 }
 
-@property --swatch-size {
-  syntax: '<resolution>';
-  inherits: false;
-  initial-value: 30px;
-}
-
 main .solutions > li ol li {
   display: block;
   border: 0;
   border-radius: 0;
   margin: 0;
   padding: 0;
-  width: var(--swatch-size);
-  height: var(--swatch-size);
+  width: var(--swatch-size-1D);
+  height: var(--swatch-size-1D);
   transition:
     border-radius 125ms ease-out,
     box-shadow 125ms ease-out,
