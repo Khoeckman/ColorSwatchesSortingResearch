@@ -3,7 +3,7 @@ import TravelingSalesmanSolver from './TravelingSalesmanSolver'
 import { scoreSwatchLine } from './score'
 import type { RGB } from 'color-convert'
 
-function populateSolution1D(solution: Element, swatches: RGB[]) {
+function populateSolution(solution: Element, swatches: RGB[]) {
   const score = Math.floor(1 / scoreSwatchLine(swatches, 3))
   solution.querySelector('.score')!.textContent = String(score)
 
@@ -19,7 +19,7 @@ function populateSolution1D(solution: Element, swatches: RGB[]) {
   })
 }
 
-export function populateSolutions1D(swatchesOriginal: RGB[]) {
+export function populateSolutions(swatchesOriginal: RGB[]) {
   const solutions = [...document.querySelector('#one-d + .solutions')!.children]
   const N = swatchesOriginal.length
 
@@ -43,30 +43,30 @@ export function populateSolutions1D(swatchesOriginal: RGB[]) {
         break
       case 3:
         swatches.sort(([ar, ag, ab], [br, bg, bb]) => {
-          const [, satA] = convert.rgb.hsl(ar, ag, ab)
-          const [, satB] = convert.rgb.hsl(br, bg, bb)
+          const [, satA] = convert.rgb.hsl.raw(ar, ag, ab)
+          const [, satB] = convert.rgb.hsl.raw(br, bg, bb)
           return satA - satB
         })
         break
       case 4:
         swatches.sort(([ar, ag, ab], [br, bg, bb]) => {
-          const [, , lightA] = convert.rgb.hsl(ar, ag, ab)
-          const [, , lightB] = convert.rgb.hsl(br, bg, bb)
+          const [, , lightA] = convert.rgb.hsl.raw(ar, ag, ab)
+          const [, , lightB] = convert.rgb.hsl.raw(br, bg, bb)
           return lightA - lightB
         })
         break
       case 5:
         swatches.sort(([ar, ag, ab], [br, bg, bb]) => {
-          const [, , valA] = convert.rgb.hsv(ar, ag, ab)
-          const [, , valB] = convert.rgb.hsv(br, bg, bb)
+          const [, , valA] = convert.rgb.hsv.raw(ar, ag, ab)
+          const [, , valB] = convert.rgb.hsv.raw(br, bg, bb)
           return valA - valB
         })
         break
 
       case 6:
         swatches.sort(([ar, ag, ab], [br, bg, bb]) => {
-          const [hueA, satA] = convert.rgb.hsl(ar, ag, ab)
-          const [hueB, satB] = convert.rgb.hsl(br, bg, bb)
+          const [hueA, satA] = convert.rgb.hsl.raw(ar, ag, ab)
+          const [hueB, satB] = convert.rgb.hsl.raw(br, bg, bb)
 
           const groupA = +(satA > 50)
           const groupB = +(satB > 50)
@@ -76,8 +76,8 @@ export function populateSolutions1D(swatchesOriginal: RGB[]) {
         break
       case 7:
         swatches.sort(([ar, ag, ab], [br, bg, bb]) => {
-          const [hueA, , lightA] = convert.rgb.hsl(ar, ag, ab)
-          const [hueB, , lightB] = convert.rgb.hsl(br, bg, bb)
+          const [hueA, , lightA] = convert.rgb.hsl.raw(ar, ag, ab)
+          const [hueB, , lightB] = convert.rgb.hsl.raw(br, bg, bb)
 
           const groupA = +(lightA > 50)
           const groupB = +(lightB > 50)
@@ -87,8 +87,8 @@ export function populateSolutions1D(swatchesOriginal: RGB[]) {
         break
       case 8:
         swatches.sort(([ar, ag, ab], [br, bg, bb]) => {
-          const [hueA, , valA] = convert.rgb.hsv(ar, ag, ab)
-          const [hueB, , valB] = convert.rgb.hsv(br, bg, bb)
+          const [hueA, , valA] = convert.rgb.hsv.raw(ar, ag, ab)
+          const [hueB, , valB] = convert.rgb.hsv.raw(br, bg, bb)
 
           const groupA = +(valA > 50)
           const groupB = +(valB > 50)
@@ -197,6 +197,16 @@ export function populateSolutions1D(swatchesOriginal: RGB[]) {
       }
     }
 
-    populateSolution1D(solution, swatches)
+    populateSolution(solution, swatches)
+  })
+}
+
+export function emptySolutions() {
+  const solutions = [...document.querySelector('#one-d + .solutions')!.children]
+
+  solutions.forEach((solution) => {
+    const ol = solution.querySelector(':scope > ol')
+    if (!ol) return
+    ol.innerHTML = ''
   })
 }

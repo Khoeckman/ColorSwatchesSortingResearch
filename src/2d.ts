@@ -1,9 +1,8 @@
-import convert from 'color-convert'
 import TravelingSalesmanSolver from './TravelingSalesmanSolver'
 import { scoreSwatchPlane } from './score'
 import type { RGB } from 'color-convert'
 
-function populateSolution2D(solution: Element, swatches: RGB[], stride: number) {
+function populateSolution(solution: Element, swatches: RGB[], stride: number) {
   const score = Math.floor(1 / scoreSwatchPlane(swatches, stride, 3))
   solution.querySelector('.score')!.textContent = String(score)
 
@@ -12,18 +11,24 @@ function populateSolution2D(solution: Element, swatches: RGB[], stride: number) 
 
   swatchesPlane.innerHTML = ''
 
-  swatches.forEach(([r, g, b], i) => {
-    if (!(i % stride)) {
-      // start on new ol
+  for (let rowStart = 0; rowStart < swatches.length; rowStart += stride) {
+    const rowLi = document.createElement('li')
+    const rowOl = document.createElement('ol')
+
+    // Add swatches for this row
+    for (let i = rowStart; i < rowStart + stride && i < swatches.length; i++) {
+      const [r, g, b] = swatches[i]
+      const swatchLi = document.createElement('li')
+      swatchLi.style.backgroundColor = `rgb(${r}, ${g}, ${b})`
+      rowOl.appendChild(swatchLi)
     }
 
-    const li = document.createElement('li')
-    li.style.backgroundColor = `rgb(${r}, ${g}, ${b})`
-    swatchesPlane.appendChild(li)
-  })
+    rowLi.appendChild(rowOl)
+    swatchesPlane.appendChild(rowLi)
+  }
 }
 
-export function populateSolutions2D(swatchesOriginal: RGB[], stride: number) {
+export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
   const solutions = [...document.querySelector('#two-d + .solutions')!.children]
   const N = swatchesOriginal.length
 
@@ -61,6 +66,16 @@ export function populateSolutions2D(swatchesOriginal: RGB[], stride: number) {
         break
     }
 
-    populateSolution2D(solution, swatches, stride)
+    populateSolution(solution, swatches, stride)
+  })
+}
+
+export function emptySolutions() {
+  const solutions = [...document.querySelector('#two-d + .solutions')!.children]
+
+  solutions.forEach((solution) => {
+    const ol = solution.querySelector(':scope > ol')
+    if (!ol) return
+    ol.innerHTML = ''
   })
 }

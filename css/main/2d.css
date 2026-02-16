@@ -1,4 +1,16 @@
-#two-d + .solutions > li ol li {
+#two-d + .solutions > li {
+  min-width: fit-content;
+}
+
+#two-d + .solutions > li > ol {
+  flex-direction: column;
+}
+
+#two-d + .solutions > li > ol li ol {
+  flex-flow: row nowrap;
+}
+
+#two-d + .solutions > li > ol li ol li {
   width: var(--swatch-size-2D);
   height: var(--swatch-size-2D);
 }

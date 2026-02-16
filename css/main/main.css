@@ -79,6 +79,7 @@ main .solutions > li p {
 }
 
 main .solutions > li ol {
+  list-style-type: none;
   display: flex;
   flex-flow: row wrap;
   margin: 0;
@@ -86,7 +87,7 @@ main .solutions > li ol {
   gap: 2px;
 }
 
-main .solutions > li ol li {
+main .solutions > li ol:not(:has(ol)) li {
   display: block;
   border: 0;
   border-radius: 0;
@@ -100,7 +101,7 @@ main .solutions > li ol li {
     transform 125ms ease-out;
 }
 
-main .solutions > li ol li:hover {
+main .solutions > li ol:not(:has(ol)) li:hover {
   border-radius: 25%;
   box-shadow: 0 0 0.5rem var(--c12);
   transform: scale(1.5);

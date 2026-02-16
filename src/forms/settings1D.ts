@@ -1,7 +1,7 @@
 import HyperStorage from 'hyperstorage-js'
 import FormValidator from './FormValidator'
 import { generateRandomRGB } from '..'
-import { populateSolutions1D } from '../1d'
+import { populateSolutions, emptySolutions } from '../1d'
 
 const id = 'settings1D'
 
@@ -32,10 +32,12 @@ function saveSettings() {
 }
 
 function applySettings() {
+  emptySolutions()
+
   document.documentElement.style.setProperty('--swatch-size-1D', settings.value.swatchSizePx + 'px')
 
   const randomSwatches = generateRandomRGB(settings.value.swatchAmount)
-  populateSolutions1D(randomSwatches)
+  populateSolutions(randomSwatches)
 }
 
 loadSettings()
