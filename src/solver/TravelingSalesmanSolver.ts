@@ -1,6 +1,5 @@
-import convert from 'color-convert'
-import type { RGB, LAB } from 'color-convert'
-import { getDeltaE_CIEDE2000 } from 'deltae-js'
+import type { RGB } from 'color-convert'
+import { distLAB } from './deltaE'
 
 export default class TravelingSalesmanSolver {
   values: RGB[]
@@ -8,25 +7,11 @@ export default class TravelingSalesmanSolver {
   distMatrix: number[][]
   path: number[]
 
-  constructor(values: RGB[], power = 1, distFn = TravelingSalesmanSolver.distLAB) {
+  constructor(values: RGB[], power = 1, distFn = distLAB) {
     this.values = values.slice()
     this.N = this.values.length
     this.path = this.values.map((_, i) => i)
     this.distMatrix = this.createDistMatrix(power, distFn)
-  }
-
-  static distRGB(a: RGB, b: RGB) {
-    const dr = a[0] - b[0]
-    const dg = a[1] - b[1]
-    const db = a[2] - b[2]
-
-    return dr * dr + dg * dg + db * db
-  }
-
-  static distLAB(a: RGB, b: RGB) {
-    const x1: LAB = convert.rgb.lab.raw(a)
-    const x2: LAB = convert.rgb.lab.raw(b)
-    return getDeltaE_CIEDE2000(x1, x2)
   }
 
   private static async awaitWorker<T>(worker: Worker): Promise<T> {
@@ -82,13 +67,13 @@ export default class TravelingSalesmanSolver {
   }
 
   async nearestNeighborPath(startIndex = 0) {
-    const worker = new Worker(new URL('./worker/nearestNeighborPath.ts', import.meta.url), { type: 'module' })
+    const worker = new Worker(new URL('../worker/NNP.ts', import.meta.url), { type: 'module' })
     worker.postMessage({ N: this.N, distMatrix: this.distMatrix, startIndex })
     this.path = await TravelingSalesmanSolver.awaitWorker(worker)
   }
 
   async twoOpt() {
-    const worker = new Worker(new URL('./worker/twoOpt.ts', import.meta.url), { type: 'module' })
+    const worker = new Worker(new URL('../worker/twoOpt.ts', import.meta.url), { type: 'module' })
     worker.postMessage({ N: this.N, path: this.path, distMatrix: this.distMatrix })
     this.path = await TravelingSalesmanSolver.awaitWorker(worker)
   }

@@ -1,6 +1,7 @@
 import convert from 'color-convert'
-import TravelingSalesmanSolver from './TravelingSalesmanSolver'
-import { scoreSwatchLine } from './score'
+import { distRGB } from './solver/deltaE'
+import TravelingSalesmanSolver from './solver/TravelingSalesmanSolver'
+import { scoreSwatchLine } from './solver/score'
 import type { RGB } from 'color-convert'
 
 function populateSolution(solution: Element, swatches: RGB[]) {
@@ -175,7 +176,7 @@ export function populateSolutions(swatchesOriginal: RGB[]) {
       case 14: {
         if (N <= 1) break
 
-        const tsp = new TravelingSalesmanSolver(swatches, 3, TravelingSalesmanSolver.distRGB)
+        const tsp = new TravelingSalesmanSolver(swatches, 3, distRGB)
 
         let bestPath: number[] = []
         let bestScore = Infinity

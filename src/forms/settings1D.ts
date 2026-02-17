@@ -56,7 +56,7 @@ const updateBtn = validator.form.querySelector('.actions button[name="settings-u
 
 updateBtn.addEventListener('click', () => {
   saveSettings()
-  document.documentElement.style.setProperty('--swatch-size', settings.value.swatchSizePx + 'px')
+  document.documentElement.style.setProperty('--swatch-size-1D', settings.value.swatchSizePx + 'px')
 })
 
 const resetBtn = validator.form.querySelector('.actions button[name="settings-reset"]')!

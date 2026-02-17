@@ -22,9 +22,9 @@
   <link href="css/style.css" rel="stylesheet" />
 
   <!-- JS -->
+  <script src="src/index.ts" type="module"></script>
   <script src="src/forms/settings1D.ts" type="module"></script>
   <script src="src/forms/settings2D.ts" type="module"></script>
-  <script src="src/index.ts" type="module"></script>
 </head>
 
 <body>
@@ -265,16 +265,37 @@
           <h3>Swatches</h3>
           <span class="score" title="Score">0</span>
         </div>
-        <p>Now each box contains a <strong>rectangular plane</strong> of the same colors.</p>
+        <p>
+          Now each box contains a <strong>rectangular plane</strong> of the same colors.<br>
+          The <strong>scoring function</strong> accounts for both down and right neighbors.
+        </p>
         <ol></ol>
       </li>
 
       <li>
         <div class="title">
-          <h3>2D Solver</h3>
+          <h3>Best 1D Solver</h3>
           <span class="score" title="Score">0</span>
         </div>
-        <p><code>LAB XY-dist</code></p>
+        <p><code>LAB dist</code></p>
+        <ol></ol>
+      </li>
+
+      <li>
+        <div class="title">
+          <h3>2D Greedy Solver</h3>
+          <span class="score" title="Score">0</span>
+        </div>
+        <p><code>LAB X- Y- dist</code></p>
+        <ol></ol>
+      </li>
+
+      <li>
+        <div class="title">
+          <h3>2D Smart Solver</h3>
+          <span class="score" title="Score">0</span>
+        </div>
+        <p><code>LAB XY dist</code></p>
         <ol></ol>
       </li>
   </main>
