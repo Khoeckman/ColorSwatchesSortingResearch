@@ -6,9 +6,9 @@ import { populateSolutions, emptySolutions } from '../2d'
 const id = 'settings2D'
 
 const defaultSettings = {
-  swatchAmountX: 20,
-  swatchAmountY: 20,
-  swatchSizePx: 30,
+  swatchAmountX: 30,
+  swatchAmountY: 30,
+  swatchSizePx: 20,
 }
 
 export const settings = new HyperStorage<typeof defaultSettings>('swatches-' + id, defaultSettings)

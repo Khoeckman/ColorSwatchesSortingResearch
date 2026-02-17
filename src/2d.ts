@@ -74,8 +74,8 @@ export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
         let bestPath: number[] = []
         let bestScore = Infinity
 
-        // Start from every swatch (max 12)
-        for (let start = 0; start < Math.min(N, 12); start++) {
+        // Start from every swatch (max 6)
+        for (let start = 0; start < Math.min(N, 6); start++) {
           await tsp2D.snakePath(start)
           await tsp2D.twoOpt(1e9 / tsp2D.N ** 2)
 
