@@ -129,8 +129,8 @@ export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
         let bestPath: number[] = []
         let bestScore = Infinity
 
-        // Start from every swatch (max 12)
-        for (let start = 0; start < Math.min(N, 12); start++) {
+        // Start from every swatch (max 6)
+        for (let start = 0; start < Math.min(N, 6); start++) {
           await tsp.nearestNeighborPath(start)
           await tsp.twoOpt()
 
@@ -145,7 +145,7 @@ export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
 
         const tsp2D = new Solver2D(swatches, stride, 2)
 
-        await tsp2D.twoOpt(2e8 / tsp2D.N)
+        await tsp2D.twoOpt(1e8 / tsp2D.N)
         swatches = tsp2D.getValuesFromPath()
         break
       }
@@ -159,8 +159,8 @@ export function emptySolutions() {
   const solutions = [...document.querySelector('#two-d + .solutions')!.children]
 
   solutions.forEach((solution) => {
-    const ol = solution.querySelector(':scope > ol')
-    if (!ol) return
-    ol.innerHTML = ''
+    if (solution.classList.contains('not-solution')) return
+    solution.querySelector('.score')!.textContent = '0'
+    solution.querySelector(':scope > ol')!.innerHTML = ''
   })
 }

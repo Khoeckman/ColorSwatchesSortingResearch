@@ -206,8 +206,8 @@ export function emptySolutions() {
   const solutions = [...document.querySelector('#one-d + .solutions')!.children]
 
   solutions.forEach((solution) => {
-    const ol = solution.querySelector(':scope > ol')
-    if (!ol) return
-    ol.innerHTML = ''
+    if (solution.classList.contains('not-solution')) return
+    solution.querySelector('.score')!.textContent = '0'
+    solution.querySelector(':scope > ol')!.innerHTML = ''
   })
 }
