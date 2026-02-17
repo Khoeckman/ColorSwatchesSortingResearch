@@ -1,55 +1,61 @@
-function getNeighbors(index: number, stride: number, N: number): number[] {
-  const neighbors: number[] = []
+function getNeighbors(pos: number, stride: number, N: number): number[] {
+  const neighbors = []
+  const col = pos % stride
+  const row = Math.floor(pos / stride)
+  const maxRow = Math.floor((N - 1) / stride)
 
+  // Left
+  if (col > 0) neighbors.push(pos - 1)
   // Right
-  if (index % stride < stride - 1 && index + 1 < N) neighbors.push(index + 1)
+  if (col < stride - 1 && pos + 1 < N) neighbors.push(pos + 1)
+  // Up
+  if (row > 0) neighbors.push(pos - stride)
   // Down
-  if (index + stride < N) neighbors.push(index + stride)
+  if (row < maxRow && pos + stride < N) neighbors.push(pos + stride)
 
   return neighbors
 }
 
 self.onmessage = function (e) {
-  const { N, stride, path, distMatrix } = e.data
+  const { N, stride, path, distMatrix, maxImprovements } = e.data
 
-  function calculateTotalDist(): number {
+  function getNeighborDist(pos: number): number {
+    const neighbors = getNeighbors(pos, stride, N)
+
     let sum = 0
 
-    for (let i = 0; i < N; i++) {
-      const neighbors = getNeighbors(i, stride, N)
-
-      for (const j of neighbors) {
-        sum += distMatrix[path[i]][path[j]]
-      }
+    for (const n of neighbors) {
+      sum += distMatrix[path[pos]][path[n]]
     }
     return sum
   }
 
   let improved = true
   let improvements = 0
-  let maxImprovements = 5e7 / N ** 2
 
   while (improved && improvements < maxImprovements) {
     improved = false
 
     for (let i = 0; i < N; i++) {
       for (let j = i + 1; j < N; j++) {
-        const currentDist = calculateTotalDist()
+        const affected = new Set([...getNeighbors(i, stride, N), ...getNeighbors(j, stride, N), i, j])
 
-        // Swap values at positions i and j
-        const temp = path[i]
-        path[i] = path[j]
-        path[j] = temp
+        let currentSum = 0
+        for (const k of affected)
+          currentSum += getNeighborDist(k)
 
-        const newDist = calculateTotalDist()
+          // Swap values at positions i and j
+        ;[path[i], path[j]] = [path[j], path[i]]
 
-        if (newDist < currentDist) {
+        let newSum = 0
+        for (const k of affected) newSum += getNeighborDist(k)
+
+        if (newSum < currentSum) {
           improved = true
           improvements++
         } else {
-          // Swap back if no improvement
-          path[j] = path[i]
-          path[i] = temp
+          // Swap back if sum is worse
+          ;[path[i], path[j]] = [path[j], path[i]]
         }
       }
     }

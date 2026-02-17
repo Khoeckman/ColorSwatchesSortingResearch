@@ -5,6 +5,8 @@ function pop<T = any>(arr: T[], index: number): T {
 self.onmessage = function (e) {
   const { N, stride, distMatrix, startIndex = 0 } = e.data
 
+  const N_Sqrt = Math.sqrt(N)
+
   function getNeighbors(pos: number): Set<number> {
     const neighbors = new Set<number>()
     const col = pos % stride
@@ -29,7 +31,7 @@ self.onmessage = function (e) {
 
   const path: number[] = Array(N)
 
-  const centerPos = ~~((N + Math.sqrt(N)) / 2)
+  const centerPos = ~~((N + N_Sqrt) / 2)
   path[centerPos] = pop(remaining, startIndex)
   const placed = new Set<number>([centerPos])
 
@@ -54,6 +56,8 @@ self.onmessage = function (e) {
     for (let i = 0; i < remaining.length; i++) {
       const distRow = distMatrix[remaining[i]]
 
+      let visitCount = 0
+
       for (const n of neighborsOfPlaced) {
         const d = getSmartDist(n, distRow)
 
@@ -62,6 +66,9 @@ self.onmessage = function (e) {
           bestIndex = i
           bestPos = n
         }
+
+        // Prevent heavy loops with many swatches
+        if (++visitCount > N_Sqrt / 2) break
       }
     }
 

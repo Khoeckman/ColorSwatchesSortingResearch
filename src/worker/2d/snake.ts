@@ -30,20 +30,14 @@ self.onmessage = function (e) {
       continue
     }
 
-    const distRows = []
-
-    for (const j of neighbors) {
-      distRows.push(distMatrix[path[j]])
-    }
-
     let bestIndex = 0
     let bestDist = Infinity
 
     for (let i = 0; i < remaining.length; i++) {
       let d = 0
 
-      for (const distRow of distRows) {
-        d += distRow[remaining[i]]
+      for (const n of neighbors) {
+        d += distMatrix[path[n]][remaining[i]]
       }
 
       if (d < bestDist) {

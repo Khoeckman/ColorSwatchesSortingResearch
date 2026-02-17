@@ -44,7 +44,6 @@ export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
         break
 
       case 2: {
-        // Best 1D solver
         if (N <= 1) break
 
         const tsp = new Solver1D(swatches, 3)
@@ -52,8 +51,8 @@ export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
         let bestPath: number[] = []
         let bestScore = Infinity
 
-        // Start from every swatch (max 24)
-        for (let start = 0; start < Math.min(N, 24); start++) {
+        // Start from every swatch (max 6)
+        for (let start = 0; start < Math.min(N, 6); start++) {
           await tsp.nearestNeighborPath(start)
           await tsp.twoOpt()
 
@@ -70,15 +69,15 @@ export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
       case 3: {
         if (N <= 1) break
 
-        const tsp2D = new Solver2D(swatches, stride, 3)
+        const tsp2D = new Solver2D(swatches, stride, 2)
 
         let bestPath: number[] = []
         let bestScore = Infinity
 
-        // Start from every swatch (max 3)
-        for (let start = 0; start < Math.min(N, 3); start++) {
+        // Start from every swatch (max 12)
+        for (let start = 0; start < Math.min(N, 12); start++) {
           await tsp2D.snakePath(start)
-          await tsp2D.twoOpt()
+          await tsp2D.twoOpt(1e9 / tsp2D.N ** 2)
 
           const score = tsp2D.totalDist()
 
@@ -93,15 +92,15 @@ export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
       case 4: {
         if (N <= 1) break
 
-        const tsp2D = new Solver2D(swatches, stride, 1.5)
+        const tsp2D = new Solver2D(swatches, stride, 2)
 
         let bestPath: number[] = []
         let bestScore = Infinity
 
-        // Start from every swatch (max 3)
-        for (let start = 0; start < Math.min(N, 3); start++) {
+        // Start from every swatch (max 2)
+        for (let start = 0; start < Math.min(N, 2); start++) {
           await tsp2D.greedyPath(start)
-          await tsp2D.twoOpt()
+          await tsp2D.twoOpt(6e9 / tsp2D.N ** 2)
 
           const score = tsp2D.totalDist()
 
@@ -116,9 +115,37 @@ export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
       case 5: {
         if (N <= 1) break
 
-        const tsp2D = new Solver2D(swatches, stride, 3)
+        const tsp2D = new Solver2D(swatches, stride, 2)
 
-        await tsp2D.simulatedAnnealing()
+        await tsp2D.twoOpt(1e7 / tsp2D.N)
+        swatches = tsp2D.getValuesFromPath()
+        break
+      }
+      case 6: {
+        if (N <= 1) break
+
+        const tsp = new Solver1D(swatches, 2)
+
+        let bestPath: number[] = []
+        let bestScore = Infinity
+
+        // Start from every swatch (max 12)
+        for (let start = 0; start < Math.min(N, 12); start++) {
+          await tsp.nearestNeighborPath(start)
+          await tsp.twoOpt()
+
+          const score = tsp.totalDist()
+
+          if (score < bestScore) {
+            bestScore = score
+            bestPath = tsp.path
+          }
+        }
+        swatches = tsp.getValuesFromPath(bestPath)
+
+        const tsp2D = new Solver2D(swatches, stride, 2)
+
+        await tsp2D.twoOpt(2e8 / tsp2D.N)
         swatches = tsp2D.getValuesFromPath()
         break
       }

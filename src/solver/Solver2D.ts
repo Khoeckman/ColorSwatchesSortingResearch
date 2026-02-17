@@ -100,19 +100,15 @@ export default class Solver2D {
     this.path = await Solver2D.awaitWorker(worker)
   }
 
-  async simulatedAnnealing(startIndex = 0) {
-    this.straightPath()
-    this.path[this.path.indexOf(startIndex)] = 0
-    this.path[0] = startIndex
-
-    const worker = new Worker(new URL('../worker/2d/simulatedAnnealing.ts', import.meta.url), { type: 'module' })
-    worker.postMessage({ N: this.N, stride: this.stride, path: this.path, distMatrix: this.distMatrix })
-    this.path = await Solver2D.awaitWorker(worker)
-  }
-
-  async twoOpt() {
+  async twoOpt(maxImprovements = 1e8 / this.N ** 2) {
     const worker = new Worker(new URL('../worker/2d/twoOpt.ts', import.meta.url), { type: 'module' })
-    worker.postMessage({ N: this.N, stride: this.stride, path: this.path, distMatrix: this.distMatrix })
+    worker.postMessage({
+      N: this.N,
+      stride: this.stride,
+      path: this.path,
+      distMatrix: this.distMatrix,
+      maxImprovements,
+    })
     this.path = await Solver2D.awaitWorker(worker)
   }
 
