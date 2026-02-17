@@ -1,0 +1,1 @@
+(function(){"use strict";self.onmessage=function(a){const{N:i,path:s,distMatrix:o}=a.data;let n=!0,c=0,m=i;function u(e,t){for(;e<t;)[s[e],s[t]]=[s[t],s[e]],e++,t--}for(;n&&c<m;){n=!1;for(let e=1;e<i-2;e++)for(let t=e+1;t<i-1;t++){const l=s[e-1],r=s[e],f=s[t],p=s[t+1],v=o[l][r]+o[f][p];o[l][f]+o[r][p]<v&&(u(e,t),n=!0,c++)}}self.postMessage(s)}})();
