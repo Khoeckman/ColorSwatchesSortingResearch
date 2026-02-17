@@ -1,22 +1,29 @@
-function getNeighbors(index: number, stride: number, N: number): number[] {
-  const neighbors: number[] = []
-
-  // Right
-  if (index % stride < stride - 1 && index + 1 < N) neighbors.push(index + 1)
-  // Down
-  if (index + stride < N) neighbors.push(index + stride)
-
-  return neighbors
-}
-
 self.onmessage = function (e) {
   const { N, stride, path, distMatrix } = e.data
+
+  function getNeighbors(pos: number): number[] {
+    const neighbors = []
+    const col = pos % stride
+    const row = Math.floor(pos / stride)
+    const maxRow = Math.floor((N - 1) / stride)
+
+    // Left
+    if (col > 0) neighbors.push(pos - 1)
+    // Right
+    if (col < stride - 1 && pos + 1 < N) neighbors.push(pos + 1)
+    // Up
+    if (row > 0) neighbors.push(pos - stride)
+    // Down
+    if (row < maxRow && pos + stride < N) neighbors.push(pos + stride)
+
+    return neighbors
+  }
 
   function calculateTotalDist(): number {
     let sum = 0
 
     for (let i = 0; i < N; i++) {
-      const neighbors = getNeighbors(i, stride, N)
+      const neighbors = getNeighbors(i)
 
       for (const j of neighbors) {
         sum += distMatrix[path[i]][path[j]]
@@ -27,7 +34,7 @@ self.onmessage = function (e) {
 
   let improved = true
   let improvements = 0
-  let maxImprovements = 5e7 / N ** 2
+  let maxImprovements = N * 2
 
   while (improved && improvements < maxImprovements) {
     improved = false

@@ -1,7 +1,7 @@
 import type { RGB } from 'color-convert'
 import { distLAB } from './deltaE'
 
-export default class TravelingSalesmanSolver {
+export default class Solver1D {
   values: RGB[]
   N: number
   distMatrix: number[][]
@@ -69,13 +69,13 @@ export default class TravelingSalesmanSolver {
   async nearestNeighborPath(startIndex = 0) {
     const worker = new Worker(new URL('../worker/NNP.ts', import.meta.url), { type: 'module' })
     worker.postMessage({ N: this.N, distMatrix: this.distMatrix, startIndex })
-    this.path = await TravelingSalesmanSolver.awaitWorker(worker)
+    this.path = await Solver1D.awaitWorker(worker)
   }
 
   async twoOpt() {
     const worker = new Worker(new URL('../worker/twoOpt.ts', import.meta.url), { type: 'module' })
     worker.postMessage({ N: this.N, path: this.path, distMatrix: this.distMatrix })
-    this.path = await TravelingSalesmanSolver.awaitWorker(worker)
+    this.path = await Solver1D.awaitWorker(worker)
   }
 
   getValuesFromPath(path = this.path) {

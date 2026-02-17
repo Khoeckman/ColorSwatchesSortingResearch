@@ -2,18 +2,13 @@ function pop<T = any>(arr: T[], index: number): T {
   return arr.splice(index, 1)[0]
 }
 
-function getNeighbors(index: number, stride: number): number[] {
+function getNeighbors(pos: number, stride: number): number[] {
   const neighbors: number[] = []
 
   // Left
-  if (index % stride && index - 1 >= 0) {
-    neighbors.push(index - 1)
-  }
-
+  if (pos % stride && pos - 1 >= 0) neighbors.push(pos - 1)
   // Up
-  if (index - stride >= 0) {
-    neighbors.push(index - stride)
-  }
+  if (pos - stride >= 0) neighbors.push(pos - stride)
 
   return neighbors
 }

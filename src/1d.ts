@@ -1,6 +1,6 @@
 import convert from 'color-convert'
 import { distRGB } from './solver/deltaE'
-import TravelingSalesmanSolver from './solver/TravelingSalesmanSolver'
+import Solver1D from './solver/Solver1D'
 import { scoreSwatchLine } from './solver/score'
 import type { RGB } from 'color-convert'
 
@@ -105,7 +105,7 @@ export function populateSolutions(swatchesOriginal: RGB[]) {
           return hueA - hueB
         })
 
-        const tsp = new TravelingSalesmanSolver(swatches)
+        const tsp = new Solver1D(swatches)
         await tsp.twoOpt()
         swatches = tsp.getValuesFromPath()
         break
@@ -113,7 +113,7 @@ export function populateSolutions(swatchesOriginal: RGB[]) {
       case 10: {
         if (N <= 1) break
 
-        const tsp = new TravelingSalesmanSolver(swatches, 3)
+        const tsp = new Solver1D(swatches, 3)
         await tsp.nearestNeighborPath()
         swatches = tsp.getValuesFromPath()
         break
@@ -121,7 +121,7 @@ export function populateSolutions(swatchesOriginal: RGB[]) {
       case 11: {
         if (N <= 1) break
 
-        const tsp = new TravelingSalesmanSolver(swatches, 3)
+        const tsp = new Solver1D(swatches, 3)
 
         let bestPath: number[] = []
         let bestScore = Infinity
@@ -144,7 +144,7 @@ export function populateSolutions(swatchesOriginal: RGB[]) {
       case 12: {
         if (N <= 1) break
 
-        const tsp = new TravelingSalesmanSolver(swatches, 3)
+        const tsp = new Solver1D(swatches, 3)
         await tsp.nearestNeighborPath()
         await tsp.twoOpt()
         swatches = tsp.getValuesFromPath()
@@ -153,7 +153,7 @@ export function populateSolutions(swatchesOriginal: RGB[]) {
       case 13: {
         if (N <= 1) break
 
-        const tsp = new TravelingSalesmanSolver(swatches, 3)
+        const tsp = new Solver1D(swatches, 3)
 
         let bestPath: number[] = []
         let bestScore = Infinity
@@ -176,7 +176,7 @@ export function populateSolutions(swatchesOriginal: RGB[]) {
       case 14: {
         if (N <= 1) break
 
-        const tsp = new TravelingSalesmanSolver(swatches, 3, distRGB)
+        const tsp = new Solver1D(swatches, 3, distRGB)
 
         let bestPath: number[] = []
         let bestScore = Infinity

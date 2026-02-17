@@ -1,7 +1,7 @@
 import type { RGB } from 'color-convert'
 import { distLAB } from './deltaE'
 
-export default class TravelingSalesmanSolver2D {
+export default class Solver2D {
   values: RGB[]
   N: number
   stride: number
@@ -84,22 +84,36 @@ export default class TravelingSalesmanSolver2D {
     return sum
   }
 
-  async greedyNearestNeighborPath(startIndex = 0) {
-    const worker = new Worker(new URL('../worker/2d/greedyNNP.ts', import.meta.url), { type: 'module' })
-    worker.postMessage({ N: this.N, stride: this.stride, distMatrix: this.distMatrix, startIndex })
-    this.path = await TravelingSalesmanSolver2D.awaitWorker(worker)
+  straightPath() {
+    this.path = this.values.map((_, i) => i)
   }
 
-  async smartNearestNeighborPath(startIndex = 0) {
-    const worker = new Worker(new URL('../worker/2d/smartNNP.ts', import.meta.url), { type: 'module' })
+  async snakePath(startIndex = 0) {
+    const worker = new Worker(new URL('../worker/2d/snake.ts', import.meta.url), { type: 'module' })
     worker.postMessage({ N: this.N, stride: this.stride, distMatrix: this.distMatrix, startIndex })
-    this.path = await TravelingSalesmanSolver2D.awaitWorker(worker)
+    this.path = await Solver2D.awaitWorker(worker)
+  }
+
+  async greedyPath(startIndex = 0) {
+    const worker = new Worker(new URL('../worker/2d/greedy.ts', import.meta.url), { type: 'module' })
+    worker.postMessage({ N: this.N, stride: this.stride, distMatrix: this.distMatrix, startIndex })
+    this.path = await Solver2D.awaitWorker(worker)
+  }
+
+  async simulatedAnnealing(startIndex = 0) {
+    this.straightPath()
+    this.path[this.path.indexOf(startIndex)] = 0
+    this.path[0] = startIndex
+
+    const worker = new Worker(new URL('../worker/2d/simulatedAnnealing.ts', import.meta.url), { type: 'module' })
+    worker.postMessage({ N: this.N, stride: this.stride, path: this.path, distMatrix: this.distMatrix })
+    this.path = await Solver2D.awaitWorker(worker)
   }
 
   async twoOpt() {
     const worker = new Worker(new URL('../worker/2d/twoOpt.ts', import.meta.url), { type: 'module' })
     worker.postMessage({ N: this.N, stride: this.stride, path: this.path, distMatrix: this.distMatrix })
-    this.path = await TravelingSalesmanSolver2D.awaitWorker(worker)
+    this.path = await Solver2D.awaitWorker(worker)
   }
 
   getValuesFromPath(path = this.path) {

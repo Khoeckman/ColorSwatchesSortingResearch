@@ -3,7 +3,7 @@ self.onmessage = function (e) {
 
   let improved = true
   let improvements = 0
-  let maxImprovements = 10_000
+  let maxImprovements = N
 
   // Repeat until no improvements are found capped at maxImprovements
   while (improved && improvements < maxImprovements) {
