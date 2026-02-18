@@ -20,14 +20,16 @@ self.onmessage = function (e) {
   const { N, stride, path, distMatrix, maxImprovements } = e.data
 
   function getNeighborDist(pos: number): number {
-    const neighbors = getNeighbors(pos, stride, N)
-
     let sum = 0
-
-    for (const n of neighbors) {
-      sum += distMatrix[path[pos]][path[n]]
-    }
+    for (const n of neighbors[pos]) sum += distMatrix[path[pos]][path[n]]
     return sum
+  }
+
+  // Cache neighbors
+  const neighbors: number[][] = []
+
+  for (let n = 0; n < N; n++) {
+    neighbors[n] = getNeighbors(n, stride, N)
   }
 
   let improved = true
@@ -38,7 +40,7 @@ self.onmessage = function (e) {
 
     for (let i = 0; i < N; i++) {
       for (let j = i + 1; j < N; j++) {
-        const affected = new Set([...getNeighbors(i, stride, N), ...getNeighbors(j, stride, N), i, j])
+        const affected = new Set([...neighbors[i], ...neighbors[j], i, j])
 
         let currentSum = 0
         for (const k of affected)
