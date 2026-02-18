@@ -2,6 +2,8 @@
 @import './main/main.scss';
 
 :root {
+  color-scheme: light dark;
+
   --hue: 230;
   --pri: hsl(var(--hue), 100%, 60%);
 
