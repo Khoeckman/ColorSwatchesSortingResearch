@@ -1,0 +1,22 @@
+form.form-validator {
+  .error-summary {
+    background-color: var(--err);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.5rem;
+
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  .field-error {
+    font-size: 0.9rem;
+    color: var(--err);
+
+    & + input {
+      border-color: var(--err);
+    }
+  }
+}

@@ -1,0 +1,148 @@
+@forward 'FormValidator.scss';
+@forward 'form.scss';
+@forward '2d.scss';
+
+main {
+  flex: 1;
+  display: flex;
+  flex-flow: column;
+  margin: 2rem 4rem;
+  height: 100%;
+
+  h2 {
+    margin-top: 4rem;
+    width: fit-content;
+  }
+
+  .unit {
+    font-weight: lighter;
+  }
+
+  > .header {
+    margin-top: 2rem;
+  }
+
+  > .header .title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    h1 {
+      margin: 0;
+    }
+
+    a {
+      background-color: transparent;
+      border-radius: 50%;
+      padding: 0.5rem;
+      transition: background-color 125ms;
+
+      &:hover {
+        background-color: var(--c24);
+      }
+    }
+
+    svg {
+      display: inherit;
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+
+  .solutions {
+    display: flex;
+    flex-flow: column;
+    gap: 1rem;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .solutions > li {
+    display: block;
+    background-color: var(--c12);
+    border: 1px solid var(--c24);
+    border-radius: 0.5rem;
+    padding: 2rem;
+    transition: border-color 125ms;
+
+    &:hover {
+      border-color: var(--c48);
+    }
+
+    &:nth-child(2) {
+      background-color: var(--c24);
+      border: 1px solid var(--c48);
+    }
+
+    &.separator-after {
+      margin-bottom: 3rem;
+    }
+
+    h3 {
+      margin: 0;
+    }
+
+    .title {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+
+    .score {
+      background-color: var(--c72);
+      border-radius: 0.3rem;
+      font-weight: bold;
+      color: var(--bg);
+      padding: 0.25rem 0.5rem;
+    }
+
+    p {
+      margin-top: 0;
+    }
+
+    ol {
+      list-style-type: none;
+      display: flex;
+      flex-flow: row wrap;
+      margin: 0;
+      padding: 0;
+      gap: 2px;
+    }
+
+    ol:not(:has(ol)) li {
+      display: block;
+      border: 0;
+      border-radius: 0;
+      margin: 0;
+      padding: 0;
+      width: var(--swatch-size-1D);
+      height: var(--swatch-size-1D);
+      transition:
+        border-radius 125ms ease-out,
+        box-shadow 125ms ease-out,
+        transform 125ms ease-out;
+
+      &:hover {
+        border-radius: 25%;
+        box-shadow: 0 0 0.5rem var(--c12);
+        transform: scale(1.5);
+        z-index: 1;
+      }
+    }
+  }
+}
+
+@media (max-width: 50em) {
+  main {
+    margin: 2rem;
+  }
+}
+
+@media (max-width: 40em) {
+  main {
+    margin: 2rem 1rem;
+  }
+}

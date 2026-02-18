@@ -1,0 +1,18 @@
+#two-d + .solutions > li {
+  min-width: fit-content;
+
+  & > ol {
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  & > ol li ol {
+    flex-flow: row nowrap;
+    gap: 1px;
+
+    li {
+      width: var(--swatch-size-2D);
+      height: var(--swatch-size-2D);
+    }
+  }
+}
