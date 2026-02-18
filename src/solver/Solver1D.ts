@@ -72,7 +72,7 @@ export default class Solver1D {
   async nearestNeighborPath(startIndex = 0) {
     if (this.destructed) return
 
-    const worker = new Worker(new URL('../worker/NNP.ts', import.meta.url), { type: 'module' })
+    const worker = new Worker(new URL('../worker/greedy.ts', import.meta.url), { type: 'module' })
     this.workers.push(worker)
     worker.postMessage({ N: this.N, distMatrix: this.distMatrix, startIndex })
     this.path = await Solver1D.awaitWorker(worker)
