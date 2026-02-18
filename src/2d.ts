@@ -1,5 +1,6 @@
 import Solver1D from './solver/Solver1D'
 import Solver2D from './solver/Solver2D'
+import HilbertAlgorithm from './solver/HilbertAlgorithm'
 import { scoreSwatchPlane } from './solver/score'
 import type { RGB } from 'color-convert'
 
@@ -29,11 +30,49 @@ function populateSolution(solution: Element, swatches: RGB[], stride: number) {
   }
 }
 
+function toSnakeOrder(swatches: number[], stride: number): void {
+  const rows = Math.ceil(swatches.length / stride)
+
+  for (let row = 0; row < rows; ++row) {
+    if (!(row % 2)) continue
+
+    const start = row * stride
+    const end = Math.min(start + stride, swatches.length)
+
+    let i = start
+    let j = end - 1
+
+    while (i < j) {
+      const tmp = swatches[i]
+      swatches[i] = swatches[j]
+      swatches[j] = tmp
+      ++i
+      --j
+    }
+  }
+}
+
 let solvers: (Solver1D | Solver2D)[] = []
 
 export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
   const solutions = [...document.querySelector('#two-d + .solutions')!.children]
   const N = swatchesOriginal.length
+
+  // Hilbert order
+  const height = Math.ceil(N / stride)
+  const order = Math.ceil(Math.log2(Math.max(stride, height)))
+  const hilbert = new HilbertAlgorithm(order)
+
+  const hilbertOrder: number[] = []
+
+  for (let y = 0; y < height; ++y) {
+    for (let x = 0; x < stride; ++x) {
+      const idx = hilbert.pointToIndex({ x, y })
+      if (idx < N) {
+        hilbertOrder.push(idx)
+      }
+    }
+  }
 
   solutions.forEach(async (solution, i) => {
     if (solution.classList.contains('not-solution')) return
@@ -72,6 +111,99 @@ export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
       case 3: {
         if (N <= 1) break
 
+        const tsp = new Solver1D(swatches, 3)
+        solvers.push(tsp)
+
+        let bestPath: number[] = []
+        let bestScore = Infinity
+
+        // Start from every swatch (max 6)
+        for (let start = 0; start < Math.min(N, 6); start++) {
+          await tsp.nearestNeighborPath(start)
+          await tsp.twoOpt()
+
+          const score = tsp.totalDist()
+
+          if (score < bestScore) {
+            bestScore = score
+            bestPath = tsp.path
+          }
+        }
+        toSnakeOrder(bestPath, stride)
+        swatches = tsp.getValuesFromPath(bestPath)
+        break
+      }
+      case 4: {
+        if (N <= 1) break
+
+        const tsp = new Solver1D(swatches, 3)
+        solvers.push(tsp)
+
+        let bestPath: number[] = []
+        let bestScore = Infinity
+
+        // Start from every swatch (max 6)
+        for (let start = 0; start < Math.min(N, 6); start++) {
+          await tsp.nearestNeighborPath(start)
+          await tsp.twoOpt()
+
+          const score = tsp.totalDist()
+
+          if (score < bestScore) {
+            bestScore = score
+            bestPath = tsp.path
+          }
+        }
+
+        bestPath = hilbertOrder.map((i) => bestPath[i])
+        swatches = tsp.getValuesFromPath(bestPath)
+        break
+      }
+      case 5: {
+        if (N <= 1) break
+
+        const tsp2D = new Solver2D(swatches, stride, 2)
+        solvers.push(tsp2D)
+
+        await tsp2D.twoOpt(1e7 / tsp2D.N)
+        swatches = tsp2D.getValuesFromPath()
+        break
+      }
+      case 6: {
+        if (N <= 1) break
+
+        const tsp = new Solver1D(swatches, 3)
+        solvers.push(tsp)
+
+        let bestPath: number[] = []
+        let bestScore = Infinity
+
+        // Start from every swatch (max 6)
+        for (let start = 0; start < Math.min(N, 6); start++) {
+          await tsp.nearestNeighborPath(start)
+          await tsp.twoOpt()
+
+          const score = tsp.totalDist()
+
+          if (score < bestScore) {
+            bestScore = score
+            bestPath = tsp.path
+          }
+        }
+
+        bestPath = hilbertOrder.map((i) => bestPath[i])
+        swatches = tsp.getValuesFromPath(bestPath)
+
+        const tsp2D = new Solver2D(swatches, stride, 2)
+        solvers.push(tsp2D)
+
+        await tsp2D.twoOpt(1e8 / tsp2D.N)
+        swatches = tsp2D.getValuesFromPath()
+        break
+      }
+      case 7: {
+        if (N <= 1) break
+
         const tsp2D = new Solver2D(swatches, stride, 2)
         solvers.push(tsp2D)
 
@@ -93,7 +225,7 @@ export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
         swatches = tsp2D.getValuesFromPath(bestPath)
         break
       }
-      case 4: {
+      case 8: {
         if (N <= 1) break
 
         const tsp2D = new Solver2D(swatches, stride, 2)
@@ -115,46 +247,6 @@ export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
           }
         }
         swatches = tsp2D.getValuesFromPath(bestPath)
-        break
-      }
-      case 5: {
-        if (N <= 1) break
-
-        const tsp2D = new Solver2D(swatches, stride, 2)
-        solvers.push(tsp2D)
-
-        await tsp2D.twoOpt(1e7 / tsp2D.N)
-        swatches = tsp2D.getValuesFromPath()
-        break
-      }
-      case 6: {
-        if (N <= 1) break
-
-        const tsp = new Solver1D(swatches, 2)
-        solvers.push(tsp)
-
-        let bestPath: number[] = []
-        let bestScore = Infinity
-
-        // Start from every swatch (max 6)
-        for (let start = 0; start < Math.min(N, 6); start++) {
-          await tsp.nearestNeighborPath(start)
-          await tsp.twoOpt()
-
-          const score = tsp.totalDist()
-
-          if (score < bestScore) {
-            bestScore = score
-            bestPath = tsp.path
-          }
-        }
-        swatches = tsp.getValuesFromPath(bestPath)
-
-        const tsp2D = new Solver2D(swatches, stride, 2)
-        solvers.push(tsp2D)
-
-        await tsp2D.twoOpt(1e8 / tsp2D.N)
-        swatches = tsp2D.getValuesFromPath()
         break
       }
     }

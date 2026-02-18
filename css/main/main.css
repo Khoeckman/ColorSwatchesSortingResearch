@@ -91,6 +91,10 @@ main .solutions > li ol:not(:has(ol)) li {
   display: block;
   border: 0;
   border-radius: 0;
+  /*  */
+  text-align: center;
+  line-height: 2;
+  /*  */
   margin: 0;
   padding: 0;
   width: var(--swatch-size-1D);
