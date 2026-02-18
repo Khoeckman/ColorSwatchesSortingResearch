@@ -52,27 +52,35 @@ function toSnakeOrder(swatches: number[], stride: number): void {
   }
 }
 
+function getHilbertOrder(stride: number, N: number): number[] {
+  const height = Math.ceil(N / stride)
+  const order = Math.ceil(Math.log2(Math.max(stride, height)))
+  const hilbert = new HilbertAlgorithm(order)
+
+  let hilbertOrder: number[] = []
+
+  for (let y = 0; y < height; ++y) {
+    for (let x = 0; x < stride; ++x) {
+      const idx = hilbert.pointToIndex({ x, y })
+      hilbertOrder.push(idx)
+    }
+  }
+
+  const sortedHilbert = structuredClone(hilbertOrder).sort()
+
+  const pos = new Map()
+  sortedHilbert.forEach((v, i) => pos.set(v, i))
+
+  return hilbertOrder.map((v) => pos.get(v))
+}
+
 let solvers: (Solver1D | Solver2D)[] = []
 
 export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
   const solutions = [...document.querySelector('#two-d + .solutions')!.children]
   const N = swatchesOriginal.length
 
-  // Hilbert order
-  const height = Math.ceil(N / stride)
-  const order = Math.ceil(Math.log2(Math.max(stride, height)))
-  const hilbert = new HilbertAlgorithm(order)
-
-  const hilbertOrder: number[] = []
-
-  for (let y = 0; y < height; ++y) {
-    for (let x = 0; x < stride; ++x) {
-      const idx = hilbert.pointToIndex({ x, y })
-      if (idx < N) {
-        hilbertOrder.push(idx)
-      }
-    }
-  }
+  const hilbertOrder = getHilbertOrder(stride, N)
 
   solutions.forEach(async (solution, i) => {
     if (solution.classList.contains('not-solution')) return

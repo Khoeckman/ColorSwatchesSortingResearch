@@ -6,8 +6,8 @@ import { populateSolutions, emptySolutions } from '../2d'
 const id = 'settings2D'
 
 const defaultSettings = {
-  swatchAmountX: 30,
-  swatchAmountY: 30,
+  swatchAmountX: 32,
+  swatchAmountY: 32,
   swatchSizePx: 20,
 }
 
