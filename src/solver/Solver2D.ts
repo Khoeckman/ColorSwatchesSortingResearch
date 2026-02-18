@@ -8,6 +8,9 @@ export default class Solver2D {
   distMatrix: number[][]
   path: number[]
 
+  workers: Worker[] = []
+  destructed = false // Prevent this instance from creating new workers
+
   constructor(values: RGB[], stride: number, power = 1, distFn = distLAB) {
     this.values = values.slice()
     this.N = this.values.length
@@ -89,19 +92,28 @@ export default class Solver2D {
   }
 
   async snakePath(startIndex = 0) {
+    if (this.destructed) return
+
     const worker = new Worker(new URL('../worker/2d/snake.ts', import.meta.url), { type: 'module' })
+    this.workers.push(worker)
     worker.postMessage({ N: this.N, stride: this.stride, distMatrix: this.distMatrix, startIndex })
     this.path = await Solver2D.awaitWorker(worker)
   }
 
   async greedyPath(startIndex = 0) {
+    if (this.destructed) return
+
     const worker = new Worker(new URL('../worker/2d/greedy.ts', import.meta.url), { type: 'module' })
+    this.workers.push(worker)
     worker.postMessage({ N: this.N, stride: this.stride, distMatrix: this.distMatrix, startIndex })
     this.path = await Solver2D.awaitWorker(worker)
   }
 
   async twoOpt(maxImprovements = 1e8 / this.N ** 2) {
+    if (this.destructed) return
+
     const worker = new Worker(new URL('../worker/2d/twoOpt.ts', import.meta.url), { type: 'module' })
+    this.workers.push(worker)
     worker.postMessage({
       N: this.N,
       stride: this.stride,
@@ -114,5 +126,17 @@ export default class Solver2D {
 
   getValuesFromPath(path = this.path) {
     return (this.values = (path || this.path).map((i) => this.values[i]))
+  }
+
+  terminateWorkers() {
+    for (const worker of this.workers) {
+      worker.terminate()
+    }
+    this.workers = []
+  }
+
+  destruct() {
+    this.terminateWorkers()
+    this.destructed = true
   }
 }

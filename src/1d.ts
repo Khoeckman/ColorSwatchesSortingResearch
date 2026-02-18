@@ -20,6 +20,8 @@ function populateSolution(solution: Element, swatches: RGB[]) {
   })
 }
 
+let solvers: Solver1D[] = []
+
 export function populateSolutions(swatchesOriginal: RGB[]) {
   const solutions = [...document.querySelector('#one-d + .solutions')!.children]
   const N = swatchesOriginal.length
@@ -106,6 +108,8 @@ export function populateSolutions(swatchesOriginal: RGB[]) {
         })
 
         const tsp = new Solver1D(swatches)
+        solvers.push(tsp)
+
         await tsp.twoOpt()
         swatches = tsp.getValuesFromPath()
         break
@@ -114,6 +118,8 @@ export function populateSolutions(swatchesOriginal: RGB[]) {
         if (N <= 1) break
 
         const tsp = new Solver1D(swatches, 3)
+        solvers.push(tsp)
+
         await tsp.nearestNeighborPath()
         swatches = tsp.getValuesFromPath()
         break
@@ -122,6 +128,7 @@ export function populateSolutions(swatchesOriginal: RGB[]) {
         if (N <= 1) break
 
         const tsp = new Solver1D(swatches, 3)
+        solvers.push(tsp)
 
         let bestPath: number[] = []
         let bestScore = Infinity
@@ -145,6 +152,8 @@ export function populateSolutions(swatchesOriginal: RGB[]) {
         if (N <= 1) break
 
         const tsp = new Solver1D(swatches, 3)
+        solvers.push(tsp)
+
         await tsp.nearestNeighborPath()
         await tsp.twoOpt()
         swatches = tsp.getValuesFromPath()
@@ -154,6 +163,7 @@ export function populateSolutions(swatchesOriginal: RGB[]) {
         if (N <= 1) break
 
         const tsp = new Solver1D(swatches, 3)
+        solvers.push(tsp)
 
         let bestPath: number[] = []
         let bestScore = Infinity
@@ -177,6 +187,7 @@ export function populateSolutions(swatchesOriginal: RGB[]) {
         if (N <= 1) break
 
         const tsp = new Solver1D(swatches, 3, distRGB)
+        solvers.push(tsp)
 
         let bestPath: number[] = []
         let bestScore = Infinity
@@ -203,6 +214,11 @@ export function populateSolutions(swatchesOriginal: RGB[]) {
 }
 
 export function emptySolutions() {
+  for (const solver of solvers) {
+    solver.destruct()
+  }
+  solvers = []
+
   const solutions = [...document.querySelector('#one-d + .solutions')!.children]
 
   solutions.forEach((solution) => {

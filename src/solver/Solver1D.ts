@@ -7,6 +7,9 @@ export default class Solver1D {
   distMatrix: number[][]
   path: number[]
 
+  workers: Worker[] = []
+  destructed = false // Prevent this instance from creating new workers
+
   constructor(values: RGB[], power = 1, distFn = distLAB) {
     this.values = values.slice()
     this.N = this.values.length
@@ -67,18 +70,36 @@ export default class Solver1D {
   }
 
   async nearestNeighborPath(startIndex = 0) {
+    if (this.destructed) return
+
     const worker = new Worker(new URL('../worker/NNP.ts', import.meta.url), { type: 'module' })
+    this.workers.push(worker)
     worker.postMessage({ N: this.N, distMatrix: this.distMatrix, startIndex })
     this.path = await Solver1D.awaitWorker(worker)
   }
 
   async twoOpt() {
+    if (this.destructed) return
+
     const worker = new Worker(new URL('../worker/twoOpt.ts', import.meta.url), { type: 'module' })
+    this.workers.push(worker)
     worker.postMessage({ N: this.N, path: this.path, distMatrix: this.distMatrix })
     this.path = await Solver1D.awaitWorker(worker)
   }
 
   getValuesFromPath(path = this.path) {
     return (this.values = (path || this.path).map((i) => this.values[i]))
+  }
+
+  terminateWorkers() {
+    for (const worker of this.workers) {
+      worker.terminate()
+    }
+    this.workers = []
+  }
+
+  destruct() {
+    this.terminateWorkers()
+    this.destructed = true
   }
 }

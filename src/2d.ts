@@ -29,6 +29,8 @@ function populateSolution(solution: Element, swatches: RGB[], stride: number) {
   }
 }
 
+let solvers: (Solver1D | Solver2D)[] = []
+
 export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
   const solutions = [...document.querySelector('#two-d + .solutions')!.children]
   const N = swatchesOriginal.length
@@ -47,6 +49,7 @@ export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
         if (N <= 1) break
 
         const tsp = new Solver1D(swatches, 3)
+        solvers.push(tsp)
 
         let bestPath: number[] = []
         let bestScore = Infinity
@@ -70,6 +73,7 @@ export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
         if (N <= 1) break
 
         const tsp2D = new Solver2D(swatches, stride, 2)
+        solvers.push(tsp2D)
 
         let bestPath: number[] = []
         let bestScore = Infinity
@@ -93,6 +97,7 @@ export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
         if (N <= 1) break
 
         const tsp2D = new Solver2D(swatches, stride, 2)
+        solvers.push(tsp2D)
 
         let bestPath: number[] = []
         let bestScore = Infinity
@@ -116,6 +121,7 @@ export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
         if (N <= 1) break
 
         const tsp2D = new Solver2D(swatches, stride, 2)
+        solvers.push(tsp2D)
 
         await tsp2D.twoOpt(1e7 / tsp2D.N)
         swatches = tsp2D.getValuesFromPath()
@@ -125,6 +131,7 @@ export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
         if (N <= 1) break
 
         const tsp = new Solver1D(swatches, 2)
+        solvers.push(tsp)
 
         let bestPath: number[] = []
         let bestScore = Infinity
@@ -144,6 +151,7 @@ export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
         swatches = tsp.getValuesFromPath(bestPath)
 
         const tsp2D = new Solver2D(swatches, stride, 2)
+        solvers.push(tsp2D)
 
         await tsp2D.twoOpt(1e8 / tsp2D.N)
         swatches = tsp2D.getValuesFromPath()
@@ -156,6 +164,11 @@ export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
 }
 
 export function emptySolutions() {
+  for (const solver of solvers) {
+    solver.destruct()
+  }
+  solvers = []
+
   const solutions = [...document.querySelector('#two-d + .solutions')!.children]
 
   solutions.forEach((solution) => {
