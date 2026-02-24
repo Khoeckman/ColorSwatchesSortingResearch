@@ -17,7 +17,13 @@ function getNeighbors(pos: number, stride: number, N: number): number[] {
 }
 
 self.onmessage = function (e) {
-  const { N, stride, path, distMatrix, maxImprovements } = e.data
+  const { N, stride, path, distMatrix, maxImprovements } = e.data as {
+    N: number
+    stride: number
+    path: number[]
+    distMatrix: number[][]
+    maxImprovements: number
+  }
 
   function getNeighborDist(pos: number): number {
     let sum = 0

@@ -1,11 +1,14 @@
 import Solver1D from './solver/Solver1D'
 import Solver2D from './solver/Solver2D'
 import HilbertAlgorithm from './solver/HilbertAlgorithm'
-import { scoreSwatchPlane } from './solver/score'
 import type { RGB } from 'color-convert'
 
-function populateSolution(solution: Element, swatches: RGB[], stride: number) {
-  const score = Math.floor(1 / scoreSwatchPlane(swatches, stride, 3))
+async function populateSolution(solution: Element, swatches: RGB[], stride: number) {
+  const tsp2D = new Solver2D(swatches, stride, 3)
+  solvers.push(tsp2D)
+
+  await tsp2D.createDistMatrix()
+  const score = await tsp2D.scorePath()
   solution.querySelector('.score')!.textContent = String(score)
 
   const swatchesPlane = solution.querySelector('ol')
@@ -98,6 +101,8 @@ export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
         const tsp = new Solver1D(swatches, 3)
         solvers.push(tsp)
 
+        await tsp.createDistMatrix()
+
         let bestPath: number[] = []
         let bestScore = Infinity
 
@@ -121,6 +126,8 @@ export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
 
         const tsp = new Solver1D(swatches, 3)
         solvers.push(tsp)
+
+        await tsp.createDistMatrix()
 
         let bestPath: number[] = []
         let bestScore = Infinity
@@ -146,6 +153,8 @@ export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
 
         const tsp = new Solver1D(swatches, 3)
         solvers.push(tsp)
+
+        await tsp.createDistMatrix()
 
         let bestPath: number[] = []
         let bestScore = Infinity
@@ -173,6 +182,7 @@ export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
         const tsp2D = new Solver2D(swatches, stride, 2)
         solvers.push(tsp2D)
 
+        await tsp2D.createDistMatrix()
         await tsp2D.twoOpt(1e7 / tsp2D.N)
         swatches = tsp2D.getValuesFromPath()
         break
@@ -182,6 +192,8 @@ export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
 
         const tsp = new Solver1D(swatches, 3)
         solvers.push(tsp)
+
+        await tsp.createDistMatrix()
 
         let bestPath: number[] = []
         let bestScore = Infinity
@@ -205,6 +217,7 @@ export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
         const tsp2D = new Solver2D(swatches, stride, 2)
         solvers.push(tsp2D)
 
+        await tsp2D.createDistMatrix()
         await tsp2D.twoOpt(1e8 / tsp2D.N)
         swatches = tsp2D.getValuesFromPath()
         break
@@ -214,6 +227,8 @@ export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
 
         const tsp2D = new Solver2D(swatches, stride, 2)
         solvers.push(tsp2D)
+
+        await tsp2D.createDistMatrix()
 
         let bestPath: number[] = []
         let bestScore = Infinity
@@ -238,6 +253,8 @@ export function populateSolutions(swatchesOriginal: RGB[], stride: number) {
 
         const tsp2D = new Solver2D(swatches, stride, 2)
         solvers.push(tsp2D)
+
+        await tsp2D.createDistMatrix()
 
         let bestPath: number[] = []
         let bestScore = Infinity

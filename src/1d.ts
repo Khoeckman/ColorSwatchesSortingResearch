@@ -1,11 +1,14 @@
 import convert from 'color-convert'
 import { distRGB } from './solver/deltaE'
 import Solver1D from './solver/Solver1D'
-import { scoreSwatchLine } from './solver/score'
 import type { RGB } from 'color-convert'
 
-function populateSolution(solution: Element, swatches: RGB[]) {
-  const score = Math.floor(1 / scoreSwatchLine(swatches, 3))
+async function populateSolution(solution: Element, swatches: RGB[]) {
+  const tsp = new Solver1D(swatches, 3)
+  solvers.push(tsp)
+
+  await tsp.createDistMatrix()
+  const score = await tsp.scorePath()
   solution.querySelector('.score')!.textContent = String(score)
 
   const swatchesLine = solution.querySelector('ol')
@@ -110,6 +113,7 @@ export function populateSolutions(swatchesOriginal: RGB[]) {
         const tsp = new Solver1D(swatches)
         solvers.push(tsp)
 
+        await tsp.createDistMatrix()
         await tsp.twoOpt()
         swatches = tsp.getValuesFromPath()
         break
@@ -120,6 +124,7 @@ export function populateSolutions(swatchesOriginal: RGB[]) {
         const tsp = new Solver1D(swatches, 3)
         solvers.push(tsp)
 
+        await tsp.createDistMatrix()
         await tsp.nearestNeighborPath()
         swatches = tsp.getValuesFromPath()
         break
@@ -129,6 +134,8 @@ export function populateSolutions(swatchesOriginal: RGB[]) {
 
         const tsp = new Solver1D(swatches, 3)
         solvers.push(tsp)
+
+        await tsp.createDistMatrix()
 
         let bestPath: number[] = []
         let bestScore = Infinity
@@ -154,6 +161,7 @@ export function populateSolutions(swatchesOriginal: RGB[]) {
         const tsp = new Solver1D(swatches, 3)
         solvers.push(tsp)
 
+        await tsp.createDistMatrix()
         await tsp.nearestNeighborPath()
         await tsp.twoOpt()
         swatches = tsp.getValuesFromPath()
@@ -164,6 +172,8 @@ export function populateSolutions(swatchesOriginal: RGB[]) {
 
         const tsp = new Solver1D(swatches, 3)
         solvers.push(tsp)
+
+        await tsp.createDistMatrix()
 
         let bestPath: number[] = []
         let bestScore = Infinity
@@ -186,8 +196,10 @@ export function populateSolutions(swatchesOriginal: RGB[]) {
       case 14: {
         if (N <= 1) break
 
-        const tsp = new Solver1D(swatches, 3, distRGB)
+        const tsp = new Solver1D(swatches, 3)
         solvers.push(tsp)
+
+        await tsp.createDistMatrix('RGB')
 
         let bestPath: number[] = []
         let bestScore = Infinity

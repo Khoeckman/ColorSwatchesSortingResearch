@@ -1,8 +1,9 @@
 import type { RGB } from 'color-convert'
-import { distLAB } from './deltaE'
+import awaitWorker from '../worker/awaitWorker'
 
 export default class Solver2D {
   values: RGB[]
+  power: number
   N: number
   stride: number
   distMatrix: number[][]
@@ -11,31 +12,13 @@ export default class Solver2D {
   workers: Worker[] = []
   destructed = false // Prevent this instance from creating new workers
 
-  constructor(values: RGB[], stride: number, power = 1, distFn = distLAB) {
+  constructor(values: RGB[], stride: number, power = 1) {
     this.values = values.slice()
+    this.power = power
     this.N = this.values.length
     this.stride = stride
     this.path = this.values.map((_, i) => i)
-    this.distMatrix = this.createDistMatrix(power, distFn)
-  }
-
-  private static async awaitWorker<T>(worker: Worker): Promise<T> {
-    const result = await new Promise((resolve: (value: T) => void, reject) => {
-      const handleMessage = (e: MessageEvent) => {
-        worker.removeEventListener('message', handleMessage)
-        resolve(e.data)
-      }
-
-      const handleError = (err: ErrorEvent) => {
-        worker.removeEventListener('error', handleError)
-        reject(err)
-      }
-
-      worker.addEventListener('message', handleMessage)
-      worker.addEventListener('error', handleError)
-    })
-    worker.terminate()
-    return result
+    this.distMatrix = []
   }
 
   private getNeighbors(index: number): number[] {
@@ -54,22 +37,12 @@ export default class Solver2D {
     return neighbors
   }
 
-  createDistMatrix(power: number, distFn: (a: RGB, b: RGB) => number): number[][] {
-    const values = this.values
-    const N = this.N
+  async createDistMatrix(distFn: 'LAB' | 'RGB' = 'LAB') {
+    if (this.destructed) return
 
-    const distMatrix = Array(N)
-      .fill(0)
-      .map(() => Array(N).fill(0))
-
-    for (let i = 0; i < N; i++) {
-      for (let j = i + 1; j < N; j++) {
-        const d = Math.pow(distFn(values[i], values[j]), power) // 8 bit
-        distMatrix[i][j] = d
-        distMatrix[j][i] = d
-      }
-    }
-    return distMatrix
+    const worker = new Worker(new URL('../worker/distMatrix.ts', import.meta.url), { type: 'module' })
+    worker.postMessage({ N: this.N, values: this.values, power: this.power, distFn })
+    this.distMatrix = await awaitWorker(worker)
   }
 
   totalDist() {
@@ -91,13 +64,21 @@ export default class Solver2D {
     this.path = this.values.map((_, i) => i)
   }
 
+  async scorePath() {
+    if (this.destructed) return
+
+    const worker = new Worker(new URL('../worker/score/2d.ts', import.meta.url), { type: 'module' })
+    worker.postMessage({ N: this.N, distMatrix: this.distMatrix, stride: this.stride, power: this.power })
+    return Math.round(1 / (await awaitWorker<number>(worker)))
+  }
+
   async snakePath(startIndex = 0) {
     if (this.destructed) return
 
     const worker = new Worker(new URL('../worker/2d/snake.ts', import.meta.url), { type: 'module' })
     this.workers.push(worker)
     worker.postMessage({ N: this.N, stride: this.stride, distMatrix: this.distMatrix, startIndex })
-    this.path = await Solver2D.awaitWorker(worker)
+    this.path = await awaitWorker(worker)
   }
 
   async greedyPath(startIndex = 0) {
@@ -106,7 +87,7 @@ export default class Solver2D {
     const worker = new Worker(new URL('../worker/2d/greedy.ts', import.meta.url), { type: 'module' })
     this.workers.push(worker)
     worker.postMessage({ N: this.N, stride: this.stride, distMatrix: this.distMatrix, startIndex })
-    this.path = await Solver2D.awaitWorker(worker)
+    this.path = await awaitWorker(worker)
   }
 
   async twoOpt(maxImprovements = 1e8 / this.N ** 2) {
@@ -121,7 +102,7 @@ export default class Solver2D {
       distMatrix: this.distMatrix,
       maxImprovements,
     })
-    this.path = await Solver2D.awaitWorker(worker)
+    this.path = await awaitWorker(worker)
   }
 
   getValuesFromPath(path = this.path) {

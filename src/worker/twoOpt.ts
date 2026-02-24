@@ -1,5 +1,9 @@
 self.onmessage = function (e) {
-  const { N, path, distMatrix } = e.data
+  const { N, path, distMatrix } = e.data as {
+    N: number
+    path: number[]
+    distMatrix: number[][]
+  }
 
   let improved = true
   let improvements = 0

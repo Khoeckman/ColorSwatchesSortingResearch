@@ -6,9 +6,9 @@ import { populateSolutions, emptySolutions } from '../2d'
 const id = 'settings2D'
 
 const defaultSettings = {
-  swatchAmountX: 32,
-  swatchAmountY: 32,
-  swatchSizePx: 20,
+  swatchAmountX: 24,
+  swatchAmountY: 24,
+  swatchSizePx: 24,
 }
 
 export const settings = new HyperStorage<typeof defaultSettings>('swatches-' + id, defaultSettings)
@@ -73,14 +73,14 @@ resetBtn.addEventListener('click', () => {
 
 validator.addValidator({
   name: 'settings2D-swatch-amount-x',
-  method: (field) => +field.value >= 1 && +field.value * +fields.swatchAmountY.value < 1000,
-  message: 'Total amount of swatches should be between 1 and 999',
+  method: (field) => +field.value >= 1 && +field.value * +fields.swatchAmountY.value <= 1600,
+  message: 'Total amount of swatches should be between 1 and 1600',
 })
 
 validator.addValidator({
   name: 'settings2D-swatch-amount-x',
-  method: (field) => +field.value >= 1 && +field.value * +fields.swatchAmountX.value < 1000,
-  message: 'Total amount of swatches should be between 1 and 999',
+  method: (field) => +field.value >= 1 && +field.value * +fields.swatchAmountX.value <= 1600,
+  message: 'Total amount of swatches should be between 1 and 1600',
 })
 
 validator.addValidator({

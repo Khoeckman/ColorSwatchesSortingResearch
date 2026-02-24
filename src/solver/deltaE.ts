@@ -7,7 +7,7 @@ export function distRGB(a: RGB, b: RGB) {
   const dg = a[1] - b[1]
   const db = a[2] - b[2]
 
-  return dr * dr + dg * dg + db * db
+  return Math.sqrt(dr * dr + dg * dg + db * db)
 }
 
 export function distLAB(a: RGB, b: RGB) {

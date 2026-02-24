@@ -3,7 +3,15 @@ function pop<T = any>(arr: T[], index: number): T {
 }
 
 self.onmessage = function (e) {
-  const { N, distMatrix, startIndex = 0 } = e.data
+  const {
+    N,
+    distMatrix,
+    startIndex = 0,
+  } = e.data as {
+    N: number
+    distMatrix: number[][]
+    startIndex: number
+  }
 
   const remaining = Array(N)
     .fill(0)

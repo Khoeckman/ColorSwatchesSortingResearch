@@ -14,7 +14,17 @@ function getNeighbors(pos: number, stride: number): number[] {
 }
 
 self.onmessage = function (e) {
-  const { N, stride, distMatrix, startIndex = 0 } = e.data
+  const {
+    N,
+    stride,
+    distMatrix,
+    startIndex = 0,
+  } = e.data as {
+    N: number
+    stride: number
+    distMatrix: number[][]
+    startIndex: number
+  }
 
   const remaining = Array(N)
     .fill(0)

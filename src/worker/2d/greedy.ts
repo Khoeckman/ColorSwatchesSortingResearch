@@ -3,7 +3,17 @@ function pop<T = any>(arr: T[], index: number): T {
 }
 
 self.onmessage = function (e) {
-  const { N, stride, distMatrix, startIndex = 0 } = e.data
+  const {
+    N,
+    stride,
+    distMatrix,
+    startIndex = 0,
+  } = e.data as {
+    N: number
+    stride: number
+    distMatrix: number[][]
+    startIndex: number
+  }
 
   const N_Sqrt = Math.sqrt(N)
 
