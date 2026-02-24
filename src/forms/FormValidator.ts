@@ -1,16 +1,18 @@
-interface Field {
-  field?: Element | RadioNodeList
+type Field = Element | RadioNodeList
+
+interface Error {
+  field?: Field
   name: string
   message: string
 }
 
-interface Validator<T extends Field['field'] = any> extends Field {
+interface Validator<T extends Field> extends Error {
   method: (field: T) => boolean
 }
 
 export default class FormValidator {
-  errors: Field[] = []
-  validators: Validator[] = []
+  errors: Error[] = []
+  validators: Validator<any>[] = []
 
   form: HTMLFormElement
 
@@ -51,7 +53,7 @@ export default class FormValidator {
   }
 
   // the field of a validator is considered an <input>-element by default
-  addValidator<T extends Field['field'] = HTMLInputElement>(validator: Validator<T>) {
+  addValidator<T extends Field = HTMLInputElement>(validator: Validator<T>) {
     const field = this.form.elements.namedItem(validator.name)
     if (!field) return
 
@@ -61,7 +63,7 @@ export default class FormValidator {
     })
   }
 
-  createInlineError(error: Field) {
+  createInlineError(error: Error) {
     const span = document.createElement('span')
 
     span.classList.add('field-error')
@@ -81,10 +83,10 @@ export default class FormValidator {
         field.classList.add('invalid')
         field.setAttribute('aria-invalid', 'true')
 
-        if (!('labels' in field && field.labels instanceof NodeList)) return
-
-        const firstLabel = field.labels[0] as HTMLLabelElement
-        firstLabel.insertBefore(errorElement, firstLabel.lastElementChild)
+        if ('labels' in field && field.labels instanceof NodeList) {
+          const firstLabel = field.labels[0] as HTMLLabelElement
+          firstLabel.insertBefore(errorElement, firstLabel.lastElementChild)
+        }
       } else if (field instanceof RadioNodeList) {
         field.forEach((el) => {
           el.classList.add('invalid')

@@ -41,7 +41,7 @@ function applySettings() {
 }
 
 loadSettings()
-requestAnimationFrame(() => requestAnimationFrame(applySettings))
+setTimeout(applySettings, 600)
 
 validator.form.addEventListener('submit', (e: SubmitEvent) => {
   const form = e.target
@@ -69,13 +69,13 @@ resetBtn.addEventListener('click', () => {
 // Validation
 
 validator.addValidator({
-  name: 'settings-swatch-amount',
+  name: 'settings1D-swatch-amount',
   method: (field) => +field.value >= 1 && +field.value <= 999,
   message: 'Should be between 1 and 999',
 })
 
 validator.addValidator({
-  name: 'settings-swatch-size',
+  name: 'settings1D-swatch-size',
   method: (field) => +field.value >= 1 && +field.value <= 3200,
   message: 'Should be between 1 and 3200 pixels',
 })
